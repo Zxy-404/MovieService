@@ -1,5 +1,6 @@
 package com.edu.bcu.controller;
 
+import com.edu.bcu.entity.Movie;
 import com.edu.bcu.entity.UserFavorite;
 import com.edu.bcu.service.UserFavoriteService;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,8 @@ public class UserFavoriteController {
     }
 
     @GetMapping
-    public List<UserFavorite> getFavorites(@PathVariable Long userId) {
-        return favoriteService.getFavoritesByUserId(userId);
+    public List<Movie> getFavorites(@PathVariable Long userId) {
+        return favoriteService.getFavoriteMoviesByUserId(userId);
     }
 
     @GetMapping("/{movieId}/exists")

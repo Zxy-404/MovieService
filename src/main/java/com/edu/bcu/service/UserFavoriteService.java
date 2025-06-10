@@ -1,17 +1,22 @@
 package com.edu.bcu.service;
 
+import com.edu.bcu.entity.Movie;
 import com.edu.bcu.entity.UserFavorite;
+import com.edu.bcu.repository.jpa.MovieJpaRepository;
 import com.edu.bcu.repository.jpa.UserFavoriteRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserFavoriteService {
     private final UserFavoriteRepository favoriteRepository;
+    private final MovieJpaRepository movieJpaRepository;
 
-    public UserFavoriteService(UserFavoriteRepository favoriteRepository) {
+    public UserFavoriteService(UserFavoriteRepository favoriteRepository, MovieJpaRepository movieJpaRepository) {
         this.favoriteRepository = favoriteRepository;
+        this.movieJpaRepository = movieJpaRepository;
     }
 
     public UserFavorite addFavorite(Long userId, Long movieId) {
@@ -32,7 +37,12 @@ public class UserFavoriteService {
         return favoriteRepository.existsByUserIdAndMovieId(userId, movieId);
     }
 
-    public List<UserFavorite> getFavoritesByUserId(Long userId) {
-        return favoriteRepository.findByUserId(userId);
+    public List<Movie> getFavoriteMoviesByUserId(Long userId) {
+        List<UserFavorite> favorites = favoriteRepository.findByUserId(userId);
+        List<Long> movieIds = new ArrayList<>();
+        for (UserFavorite favorite : favorites) {
+            movieIds.add(favorite.getMovieId());
+        }
+        return movieJpaRepository.findAllById(movieIds);
     }
 }
